@@ -113,3 +113,53 @@ console.log(users);
 master.deleteUser(ryu);
 
 console.log(users);
+
+// pre classes in js (in case i run into old code) and i want to get a deeper understanding on what is going on
+function User1(email, name) {
+  this.email = email;
+  this.name = name;
+  this.online = false;
+}
+
+//this adds the function to the prototype of User1 making it like a basic function of User1
+//think like .sort on array's this will allow later for prototype inheritance
+//the function above and these 2 functions below all happen when we are using the class keyword
+User1.prototype.login = function () {
+  this.online = true;
+  console.log(this.email, 'has logged in');
+};
+
+User1.prototype.logout = function () {
+  this.online = false;
+  console.log(this.email, 'has logged out');
+};
+
+//now this is how prototype inheritance works
+//the 3 dots turns the arguments into an array so we can use it later in the function
+//instead of having to use [arg1, arg1] or how ever many arguments you need
+function Admin1(...args) {
+  //can also use .call
+  User1.apply(this, args);
+  this.role = 'super admin';
+}
+
+//this is inheritance
+Admin1.prototype = Object.create(User1.prototype);
+//this is making a new prototype
+Admin1.prototype.deleteUser = function (u) {
+  console.log('Before deletion:', users1);
+  users1 = users1.filter((user) => {
+    return user.email != u.email;
+  });
+  console.log('After deletion:', users1);
+};
+
+let userOne = new User1('h@gmail.com', 'heino');
+let userTwo = new User1('k@gmail.com', 'kai');
+let adminOne = new Admin1('p@gmail.com', 'proto lord');
+
+let users1 = [userOne, userTwo, adminOne];
+
+console.log(userOne);
+userTwo.login();
+console.log(adminOne);
